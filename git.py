@@ -97,6 +97,7 @@ class DotbotGit(dotbot.Plugin):
                 current_commit = self._get_current_commit()
                 if current_commit != self.commit:
                     self.checkout('commit')
+            return success
 
         def _clone(self):
             if not os.path.isdir(self.path):
