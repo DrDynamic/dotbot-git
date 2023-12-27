@@ -130,7 +130,7 @@ class DotbotGit(dotbot.Plugin):
             command += ' pull --quiet'
             
             if self.recursive:
-                command += '--recurse-submodules '
+                command += ' --recurse-submodules '
 
             return self._run_command(command)
 
