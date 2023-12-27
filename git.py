@@ -12,33 +12,44 @@ class DotbotGit(dotbot.Plugin):
         if directive != self._directive:
             raise ValueError('git cannot handle directive %s' %
                 directive)
+
         success = True
+
         for clone_path in data:
             repo_definition = data[clone_path]
 
             repo = self.Repository(self._log)
             repo.path = os.path.expanduser(clone_path)
+
             if 'url' in repo_definition:
                 repo.url = repo_definition['url']
             else:
                 success = False
                 self._log.error('Failed to clone repository! (no url specified)')
                 continue
+
             if 'branch' in repo_definition:
                 repo.branch = repo_definition['branch']
+
             if 'commit' in repo_definition:
                 repo.commit = repo_definition['commit']
+
             if 'method' in repo_definition:
                 if repo_definition['method'] in ['clone', 'pull', 'clone-or-pull']:
                     repo.method = repo_definition['method']
                 else:
                     self._log.warning('Method '+repo_definition['method']
-                            +'is not defined! (Will be ignored...)')
+                            +'is not defined! (Will be ignored…)')
+
+            if 'recursive' in repo_definition:
+                repo.recursive = repo_definition.recursive
+
             if 'description' in repo_definition:
                 repo.description = repo_definition['description']
             
             if not repo.load():
                 success = False
+
         return success
 
     class Repository:
@@ -48,6 +59,7 @@ class DotbotGit(dotbot.Plugin):
         commit=None
         method='clone-or-pull'
         description=None
+        recursive=False
 
         _log = None
 
@@ -104,16 +116,22 @@ class DotbotGit(dotbot.Plugin):
                 os.makedirs(self.path)
 
             command = 'git clone --quiet '
+
+            if self.recursive:
+                command += '--recurse-submodules '
+
             command += self.url + ' ' + self.path
             
             return self._run_command(command)
 
         def _pull(self):
-            
             command = 'git --work-tree="' + self.path + '"'
             command += ' --git-dir="' + self.path + '/.git"'
             command += ' pull --quiet'
             
+            if self.recursive:
+                command += '--recurse-submodules '
+
             return self._run_command(command)
 
         def _checkout(self, source='branch'):
@@ -160,7 +178,7 @@ class DotbotGit(dotbot.Plugin):
                         check=True)
                 return True
             except subprocess.CalledProcessError:
-                self._log.error('git command failed...')
+                self._log.error('git command failed…')
                 return False
 
         def _repo_exists(self):

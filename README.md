@@ -20,7 +20,7 @@ git submodule add https://github.com/DrDynamic/dotbot-git.git
 
 ## Requirements
 
-This plugin needs git 2.22 or later to be installes.
+This plugin needs git 2.22 or later to be installed.
 
 Also please note, that this plugin clones repositories direcly into the given path. 
 No subfolders are created! 
@@ -56,6 +56,7 @@ No subfolders are created!
        commit: <commit hash>
        method: <clone|pull|clone-or-pull> 
        description: <name of the repository or something like that>
+       recursive: <boolean>
     ...
 ...
 ```
@@ -72,6 +73,10 @@ No subfolders are created!
     '~/.oh-my-zsh/custom/themes/powerlevel10k':
         url: 'https://github.com/romkatv/powerlevel10k.git'
         description: 'oh my zsh - powerlevel10k'
+    '~/.zprezto':
+        url: 'https://github.com/sorin-ionescu/prezto.git'
+        description: "Install zprezto"
+        recursive: true
     ...
 ...
 ```
