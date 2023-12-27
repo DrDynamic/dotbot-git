@@ -42,7 +42,7 @@ class DotbotGit(dotbot.Plugin):
                             +'is not defined! (Will be ignored…)')
 
             if 'recursive' in repo_definition:
-                repo.recursive = repo_definition.recursive
+                repo.recursive = repo_definition['recursive']
 
             if 'description' in repo_definition:
                 repo.description = repo_definition['description']
