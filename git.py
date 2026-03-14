@@ -152,8 +152,8 @@ class DotbotGit(dotbot.Plugin):
 
         def _get_current_commit(self):
             p = subprocess.Popen(
-                    ['git --git-dir="'+self.path+'/.git" rev-parse HEAD'],
-                    shell=True,
+                    shlex.split('git --git-dir="' + self.path + '/.git" rev-parse HEAD'),
+                    shell=False,
                     stdout=subprocess.PIPE)
             output = p.communicate()[0].decode()
             if p.returncode == 0:
@@ -162,8 +162,8 @@ class DotbotGit(dotbot.Plugin):
 
         def _get_current_branch(self):
             p = subprocess.Popen(
-                    ['git --git-dir="' + self.path + '/.git" branch --show-current'],
-                    shell=True,
+                    shlex.split('git --git-dir="' + self.path + '/.git" branch --show-current'),
+                    shell=False,
                     stdout=subprocess.PIPE)
             output = p.communicate()[0].decode()
             if p.returncode == 0:
