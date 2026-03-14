@@ -19,7 +19,7 @@ class DotbotGit(dotbot.Plugin):
             repo_definition = data[clone_path]
 
             repo = self.Repository(self._log)
-            repo.path = os.path.expanduser(clone_path)
+            repo.path = os.path.abspath(os.path.expanduser(clone_path))
 
             if 'url' in repo_definition:
                 repo.url = repo_definition['url']
