@@ -1,4 +1,4 @@
-import subprocess, dotbot, os
+import subprocess, dotbot, os, shlex
 
 from pprint import PrettyPrinter
 
@@ -120,8 +120,8 @@ class DotbotGit(dotbot.Plugin):
             if self.recursive:
                 command += '--recurse-submodules '
 
-            command += self.url + ' ' + self.path
-            
+            command += self.url + ' "' + self.path + '"'
+
             return self._run_command(command)
 
         def _pull(self):
@@ -173,8 +173,8 @@ class DotbotGit(dotbot.Plugin):
         def _run_command(self, command):
             try:
                 subprocess.run(
-                        [command], 
-                        shell=True, 
+                        shlex.split(command),
+                        shell=False,
                         check=True)
                 return True
             except subprocess.CalledProcessError:
