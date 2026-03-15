@@ -26,12 +26,15 @@ class DotbotGit(dotbot.Plugin):
 
             repo_definition = data[clone_path]
 
-            url = repo_definition.get('url', url)
-            branch = repo_definition.get('branch', branch)
-            commit = repo_definition.get('commit', commit)
-            method = repo_definition.get('method', method)
-            recursive = repo_definition.get('recursive', recursive)
-            description = repo_definition.get('description', description)
+            if isinstance(repo_definition, dict):
+                url = repo_definition.get('url', url)
+                branch = repo_definition.get('branch', branch)
+                commit = repo_definition.get('commit', commit)
+                method = repo_definition.get('method', method)
+                recursive = repo_definition.get('recursive', recursive)
+                description = repo_definition.get('description', description)
+            else:
+                url = repo_definition
 
             repo = self.Repository(self._log)
             repo.path = os.path.abspath(os.path.expanduser(clone_path))

@@ -63,6 +63,7 @@ No subfolders are created!
        method: <clone|pull|clone-or-pull> 
        description: <name of the repository or something like that>
        recursive: <true|false>
+    '/local/path/using/shorthand': <url to repository>
     ...
 ...
 ```
@@ -87,6 +88,7 @@ No subfolders are created!
         url: 'https://github.com/sorin-ionescu/prezto.git'
         description: "Install zprezto"
         recursive: true
+    '~/dev/dotbot-git': 'https://github.com/DrDynamic/dotbot-git.git'
     ...
 ...
 ```
