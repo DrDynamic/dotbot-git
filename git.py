@@ -14,38 +14,52 @@ class DotbotGit(dotbot.Plugin):
                 directive)
 
         success = True
+        defaults = self._context.defaults().get('git', {})
 
         for clone_path in data:
+            url = defaults.get('url')
+            branch = defaults.get('branch')
+            commit = defaults.get('commit')
+            method = defaults.get('method')
+            recursive = defaults.get('recursive')
+            description = defaults.get('description')
+
             repo_definition = data[clone_path]
+
+            url = repo_definition.get('url', url)
+            branch = repo_definition.get('branch', branch)
+            commit = repo_definition.get('commit', commit)
+            method = repo_definition.get('method', method)
+            recursive = repo_definition.get('recursive', recursive)
+            description = repo_definition.get('description', description)
 
             repo = self.Repository(self._log)
             repo.path = os.path.abspath(os.path.expanduser(clone_path))
 
-            if 'url' in repo_definition:
-                repo.url = repo_definition['url']
+            if url is not None:
+                repo.url = url
             else:
                 success = False
                 self._log.error('Failed to clone repository! (no url specified)')
                 continue
 
-            if 'branch' in repo_definition:
-                repo.branch = repo_definition['branch']
+            if branch is not None:
+                repo.branch = branch
 
-            if 'commit' in repo_definition:
-                repo.commit = repo_definition['commit']
+            if commit is not None:
+                repo.commit = commit
 
-            if 'method' in repo_definition:
-                if repo_definition['method'] in ['clone', 'pull', 'clone-or-pull']:
-                    repo.method = repo_definition['method']
+            if method is not None:
+                if method in ['clone', 'pull', 'clone-or-pull']:
+                    repo.method = method
                 else:
-                    self._log.warning('Method '+repo_definition['method']
-                            +'is not defined! (Will be ignored…)')
+                    self._log.warning('Method ' + method + 'is not defined! (Will be ignored…)')
 
-            if 'recursive' in repo_definition:
-                repo.recursive = repo_definition['recursive']
+            if recursive is not None:
+                repo.recursive = recursive
 
-            if 'description' in repo_definition:
-                repo.description = repo_definition['description']
+            if description is not None:
+                repo.description = description
             
             if not repo.load():
                 success = False
