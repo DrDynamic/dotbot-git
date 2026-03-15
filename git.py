@@ -105,7 +105,7 @@ class DotbotGit(dotbot.Plugin):
             if method == 'pull':
                 if not self._repo_exists():
                     method = None
-                    self._log.error("Repository doesn't exist! Woun't pull " + self._get_description())
+                    self._log.error("Repository doesn't exist! Won't pull " + self._get_description())
 
             # loading
             success = True
