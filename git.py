@@ -108,7 +108,7 @@ class DotbotGit(dotbot.Plugin):
             if self.commit is not None:
                 current_commit = self._get_current_commit()
                 if current_commit != self.commit:
-                    self.checkout('commit')
+                    self._checkout('commit')
             return success
 
         def _clone(self):
