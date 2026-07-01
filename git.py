@@ -1,4 +1,4 @@
-import subprocess, dotbot, os
+import subprocess, dotbot, os, shlex
 
 from pprint import PrettyPrinter
 
@@ -19,7 +19,7 @@ class DotbotGit(dotbot.Plugin):
             repo_definition = data[clone_path]
 
             repo = self.Repository(self._log)
-            repo.path = os.path.expanduser(clone_path)
+            repo.path = os.path.abspath(os.path.expanduser(clone_path))
 
             if 'url' in repo_definition:
                 repo.url = repo_definition['url']
@@ -108,7 +108,7 @@ class DotbotGit(dotbot.Plugin):
             if self.commit is not None:
                 current_commit = self._get_current_commit()
                 if current_commit != self.commit:
-                    self.checkout('commit')
+                    self._checkout('commit')
             return success
 
         def _clone(self):
@@ -120,8 +120,8 @@ class DotbotGit(dotbot.Plugin):
             if self.recursive:
                 command += '--recurse-submodules '
 
-            command += self.url + ' ' + self.path
-            
+            command += self.url + ' "' + self.path + '"'
+
             return self._run_command(command)
 
         def _pull(self):
@@ -152,8 +152,8 @@ class DotbotGit(dotbot.Plugin):
 
         def _get_current_commit(self):
             p = subprocess.Popen(
-                    ['git --git-dir="'+self.path+'/.git" rev-parse HEAD'],
-                    shell=True,
+                    shlex.split('git --git-dir="' + self.path + '/.git" rev-parse HEAD'),
+                    shell=False,
                     stdout=subprocess.PIPE)
             output = p.communicate()[0].decode()
             if p.returncode == 0:
@@ -162,8 +162,8 @@ class DotbotGit(dotbot.Plugin):
 
         def _get_current_branch(self):
             p = subprocess.Popen(
-                    ['git --git-dir="' + self.path + '/.git" branch --show-current'],
-                    shell=True,
+                    shlex.split('git --git-dir="' + self.path + '/.git" branch --show-current'),
+                    shell=False,
                     stdout=subprocess.PIPE)
             output = p.communicate()[0].decode()
             if p.returncode == 0:
@@ -173,8 +173,8 @@ class DotbotGit(dotbot.Plugin):
         def _run_command(self, command):
             try:
                 subprocess.run(
-                        [command], 
-                        shell=True, 
+                        shlex.split(command),
+                        shell=False,
                         check=True)
                 return True
             except subprocess.CalledProcessError:
